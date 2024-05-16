@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'iCielAlina';
+    src: url('../fonts/iCielAlina.eot');
+    src: url('../fonts/iCielAlina.eot') format('embedded-opentype'),
+         url('../fonts/iCielAlina.woff2.html') format('woff2'),
+         url('../fonts/iCielAlina.woff') format('woff'),
+         url('../fonts/iCielAlina.ttf') format('truetype'),
+         url('../fonts/iCielAlina.svg') format('svg');
+}
