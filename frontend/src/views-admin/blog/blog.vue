@@ -212,7 +212,7 @@
             </div>
             <div class="form-group">
               <label for="mota">Nội dung</label>
-              <textarea type="text" class="form-control" id="mota" v-model="mota"></textarea>
+              <textarea type="text" rows="4" cols="50" class="form-control" id="mota" v-model="mota"></textarea>
             </div>
             <div v-if="selectedWedding" class="d-flex hinhanhadminchinhsua">
               <div v-for="(imageUrl, index) in selectedWedding.hinhanhblog" :key="index">

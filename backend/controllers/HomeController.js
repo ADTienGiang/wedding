@@ -243,6 +243,12 @@ const addWedding = (req, res) => {
             });
         }
         try {
+            const existingWedding = await Wedding.findOne({ where: { duongdan: req.body.duongdan } });
+            if (existingWedding) {
+                return res.status(400).json({
+                    message: 'Đường dẫn đã tồn tại'
+                });
+            }   
             const newWedding = await Wedding.create({
                 tieude: req.body.tieude,
                 capdoi: req.body.capdoi,
@@ -325,28 +331,21 @@ const updateWedding = (req, res) => {
                 banner: req.files['banner'] ? `${req.protocol}://${req.get('host')}/${req.files['banner'][0].filename}` : null
             };
             await wedding.update(updatedWedding);
-
-            // Kiểm tra và cập nhật các phần của đám cưới
             if (req.body.parts && Array.isArray(req.body.parts)) {
                 for (const part of req.body.parts) {
                     let partToUpdate = await Part.findByPk(part.id);
                     if (partToUpdate) {
                         await partToUpdate.update({
-                            tieudephu: part.title, // Cập nhật tên trường cho phù hợp
-                            noidung: part.content, // Cập nhật tên trường cho phù hợp
-                            bocuc: part.layout // Cập nhật tên trường cho phù hợp
+                            tieudephu: part.title, 
+                            noidung: part.content, 
+                            bocuc: part.layout 
                         });
-
-                        // Xóa tất cả các hình ảnh cũ của phần
                         await HinhanhWedding.destroy({
                             where: {
                                 idpart: partToUpdate.id
                             }
                         });
-
-                        // Lấy danh sách hình ảnh mới từ req.files
                         const images = req.files['images[]'] ? req.files['images[]'].filter(file => file.originalname.startsWith(`part${partToUpdate.stt - 1}_`)) : [];
-                        // Tạo hoặc cập nhật các bản ghi HinhanhWedding cho mỗi hình ảnh mới
                         await Promise.all(images.map(image => {
                             return HinhanhWedding.create({
                                 idpart: partToUpdate.id,
@@ -358,7 +357,6 @@ const updateWedding = (req, res) => {
                     }
                 }
             }
-
             res.status(200).json({
                 message: 'Cập nhật thông tin cưới thành công!',
                 data: updatedWedding
@@ -370,6 +368,43 @@ const updateWedding = (req, res) => {
             });
         }
     });
+};
+const deleteWedding = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        // Find the wedding to delete
+        const wedding = await Wedding.findByPk(id);
+
+        if (!wedding) {
+            return res.status(404).json({
+                message: 'Không tìm thấy thông tin cưới'
+            });
+        }
+
+        // Find all parts related to the wedding
+        const parts = await Part.findAll({ where: { idwedding: id } });
+
+        // Delete all images related to each part
+        for (const part of parts) {
+            await HinhanhWedding.destroy({ where: { idpart: part.id } });
+        }
+
+        // Delete all parts related to the wedding
+        await Part.destroy({ where: { idwedding: id } });
+
+        // Delete the wedding
+        await wedding.destroy();
+
+        res.status(200).json({
+            message: 'Xóa thông tin cưới thành công!'
+        });
+    } catch (error) {
+        console.error('Lỗi khi xóa thông tin cưới:', error);
+        res.status(500).json({
+            message: 'Lỗi khi xóa thông tin cưới'
+        });
+    }
 };
 
 const addLogoBrand = async (req, res) => {
@@ -733,6 +768,8 @@ module.exports = {
     updateWedding,
     getWedding,
     deleteImage,
+    deleteWedding,
+
 
     addLogoBrand,
     getLogoBrand,

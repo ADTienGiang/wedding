@@ -23,7 +23,7 @@
           <td>
             <div>{{ wd.id }}</div>
           </td>
-        
+
           <td>
             <div class="max-width-td">{{ wd.tieude }}</div>
           </td>
@@ -59,7 +59,7 @@
               <i class="bx bx-edit-alt iconmomodalchinhsuasp" @click="sendata(wd)"></i>
             </a>
             <a>
-              <i class='bx bxs-coffee-togo thungrac'></i>
+              <i class='bx bxs-coffee-togo thungrac' @click="deleteWedding(wd.id)"></i>
             </a>
           </td>
         </tr>
@@ -151,7 +151,7 @@
           </div>
           <div class="form-group">
             <label for="trangthaihienthi">Trạng thái hiển thị</label>
-            <input type="checkbox"  v-model="trangthaihienthi" />
+            <input type="checkbox" v-model="trangthaihienthi" />
           </div>
 
           <div class="modal-body">
@@ -288,16 +288,16 @@
                     </option>
                   </select>
                 </div>
-                <component :part="part" :is="part.dynamicComponent" isUpdate="isUpdate" :images="selectedWedding.part" :wedding="selectedWedding" 
-                  :part1="part.HinhanhWedding" :idpart="part.id" @part-updated="handlePartUpdated(index, $event)"
-                  :selectedPart="selectedPart"
+                <component :part="part" :is="part.dynamicComponent" isUpdate="isUpdate" :images="selectedWedding.part"
+                  :wedding="selectedWedding" :part1="part.HinhanhWedding" :idpart="part.id"
+                  @part-updated="handlePartUpdated(index, $event)" :selectedPart="selectedPart"
                   @image-uploaded="handleImageUploaded1(index, $event)">
                 </component>
                 <button class="btn btn-danger" @click="removePart(part.id)">Xóa phần này</button>
               </div>
             </div>
           </div>
-           
+
           <a type="button" class="btn btn-primary" @click="addNewPart">
             <i class="fa-solid fa-circle-plus"></i> <span>Thêm phần</span>
           </a>
@@ -384,44 +384,44 @@ export default {
       }
     },
     sendata(a) {
-     console.log(a.id)
-     this.id = a.id;
-     this.banner = a.banner;
-     this.selectedWedding = a;
-     this.tieude = a.tieude;
-     this.capdoi = a.capdoi;
-     this.quoctich = a.quoctich;
-     this.ytuong = a.ytuong;
-     this.soluongkhach = a.soluongkhach;
-     this.diadiem = a.diadiem;
-     this.theloai = a.theloai;
-     this.duongdan = a.duongdan;
-     this.trangthaihienthi = a.trangthaihienthi;
-     console.log(this.banner)
-     this.image = [];
-     this.visible = false;
-     this.message = '';
-     this.duongdanmau = '';
-     this.filesArr = [];
-     this.avatar = '';
-     this.selectedWedding.part.forEach(part => {
-       this.loadComponentForUpdate(part);
-     });
-     this.parts.forEach(part => {
-         part.image = []; // Khởi tạo mảng hình ảnh cho mỗi phần
-     });
+      console.log(a.id)
+      this.id = a.id;
+      this.banner = a.banner;
+      this.selectedWedding = a;
+      this.tieude = a.tieude;
+      this.capdoi = a.capdoi;
+      this.quoctich = a.quoctich;
+      this.ytuong = a.ytuong;
+      this.soluongkhach = a.soluongkhach;
+      this.diadiem = a.diadiem;
+      this.theloai = a.theloai;
+      this.duongdan = a.duongdan;
+      this.trangthaihienthi = a.trangthaihienthi;
+      console.log(this.banner)
+      this.image = [];
+      this.visible = false;
+      this.message = '';
+      this.duongdanmau = '';
+      this.filesArr = [];
+      this.avatar = '';
+      this.selectedWedding.part.forEach(part => {
+        this.loadComponentForUpdate(part);
+      });
+      this.parts.forEach(part => {
+        part.image = []; // Khởi tạo mảng hình ảnh cho mỗi phần
+      });
 
-     a.part.forEach((part, partIndex) => {
-         if (part.HinhanhWedding) {
-             part.HinhanhWedding.forEach(image => {
-                 // Kiểm tra xem có hình ảnh trong phần này không
-                 if (this.parts[partIndex]) {
-                     this.parts[partIndex].image.push(image.duongDan);
-                 }
-             });
-         }
-     });
-   },
+      a.part.forEach((part, partIndex) => {
+        if (part.HinhanhWedding) {
+          part.HinhanhWedding.forEach(image => {
+            // Kiểm tra xem có hình ảnh trong phần này không
+            if (this.parts[partIndex]) {
+              this.parts[partIndex].image.push(image.duongDan);
+            }
+          });
+        }
+      });
+    },
     loadComponent(part) {
       const componentName = this.layouts.find(layout => layout.id === parseInt(part.selectedLayoutComponent)).componentName;
       import(`../../../components/layout-wedding/${componentName}.vue`)
@@ -442,19 +442,19 @@ export default {
             part.idpart = part.id;
 
             const selectedPart = {
-                id: part.id,
-                idwedding: part.idwedding,
-                bocuc: part.bocuc,
-                noidung: part.noidung,
-                tieudephu: part.tieudephu,
-                stt: part.stt,
-                HinhanhWedding: part.HinhanhWedding
+              id: part.id,
+              idwedding: part.idwedding,
+              bocuc: part.bocuc,
+              noidung: part.noidung,
+              tieudephu: part.tieudephu,
+              stt: part.stt,
+              HinhanhWedding: part.HinhanhWedding
             };
 
             // Gửi dữ liệu lọc được đến component con
             this.selectedPart = selectedPart;
           })
-          
+
           .catch(error => console.error("Failed to load the component", error));
       } else {
         console.error(`Layout with ID ${layoutId} not found.`);
@@ -523,7 +523,23 @@ export default {
       } else if (!this.diadiem) {
         this.showToast('Chưa nhập địa điểm');
         return;
+      } else if (!this.theloai) {
+        this.showToast('Chưa nhập thể loại');
+        return;
+      } else if (this.filesArr == 0) {
+        this.showToast('Chưa chọn hình ảnh');
+        return;
+      } else if (this.parts.length == 0) {
+        this.showToast('Chưa chọn layout ảnh');
+        return;
       }
+      for (const part of this.parts) {
+        if (!part.image || !Array.isArray(part.image) || part.image.length === 0) {
+          this.showToast(`Chưa chọn hình ảnh cho phần`);
+          return;
+        }
+      }
+      console.log(this.parts)
       const formData = new FormData();
       this.parts.forEach((part, index) => {
         formData.append(`parts[${index}][title]`, part.title);
@@ -536,8 +552,6 @@ export default {
           });
         }
       });
-      console.log(this.parts)
-      // Append the main banner image for the wedding if available
       if (this.avatar && this.avatar.length > 0) {
         Array.from(this.avatar).forEach(file => {
           formData.append('banner', file, file.name);
@@ -549,7 +563,6 @@ export default {
       formData.append('theloai', this.theloai);
       formData.append('capdoi', this.capdoi);
       formData.append('trangthaihienthi', this.trangthaihienthi);
-
       formData.append('quoctich', this.quoctich);
       formData.append('ytuong', this.ytuong);
       formData.append('soluongkhach', this.soluongkhach);
@@ -568,7 +581,11 @@ export default {
         this.showToast(wedding.data.message);
         await this.getWedding();
       } catch (error) {
-        console.error('Lỗi khi thêm wedding:', error);
+        if (error.response && error.response.data && error.response.data.message) {
+          this.showToast(error.response.data.message);
+        } else {
+          console.error('Lỗi khi thêm wedding:', error);
+        }
       }
     },
     async updateWedding() {
@@ -595,19 +612,19 @@ export default {
 
       const formData = new FormData();
       this.parts.forEach((part, index) => {
-    formData.append(`parts[${index}][id]`, part.id);
-    formData.append(`parts[${index}][title]`, part.title);
-    formData.append(`parts[${index}][content]`, part.content);
-    formData.append(`parts[${index}][layout]`, part.selectedLayoutComponent);
+        formData.append(`parts[${index}][id]`, part.id);
+        formData.append(`parts[${index}][title]`, part.title);
+        formData.append(`parts[${index}][content]`, part.content);
+        formData.append(`parts[${index}][layout]`, part.selectedLayoutComponent);
 
-    // Chỉ thêm ảnh nếu có sự thay đổi về ảnh
-    if (part.image && Array.isArray(part.image) && part.image.length > 0) {
-      part.image.forEach((imgObj, imageIndex) => {
-        const blob = this.base64ToBlob(imgObj.image);
-        formData.append(`images[]`, blob, `part${index}_image${imageIndex}.jpg`);
+        // Chỉ thêm ảnh nếu có sự thay đổi về ảnh
+        if (part.image && Array.isArray(part.image) && part.image.length > 0) {
+          part.image.forEach((imgObj, imageIndex) => {
+            const blob = this.base64ToBlob(imgObj.image);
+            formData.append(`images[]`, blob, `part${index}_image${imageIndex}.jpg`);
+          });
+        }
       });
-    }
-  });
 
       console.log(this.parts)
       // Append the main banner image for the wedding if available
@@ -637,7 +654,7 @@ export default {
             },
           }
         );
-        this.parts=[];
+        this.parts = [];
         this.showToast(wedding.data.message);
         await this.getWedding();
       } catch (error) {
@@ -741,6 +758,22 @@ export default {
       this.bocuc = '';
       this.duongdanmau = '';
       this.banner = '';
+    },
+    async deleteWedding(id) {
+      const userConfirmed = confirm("bạn có chắc chắn muốn xóa wedding này?");
+      if (userConfirmed) {
+        try {
+          const productdelete = await this.$axios.delete(
+            `deleteWedding/` + id
+          );
+          this.showToast(productdelete.data.message);
+          this.getWedding();
+        } catch (error) {
+          console.error(error);
+        }
+      } else {
+        // Người dùng đã hủy xóa sản phẩm
+      }
     },
   },
 };

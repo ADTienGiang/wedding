@@ -15,7 +15,8 @@ const {
     updateWedding,
     getWedding,
     deleteImage,
-
+    deleteWedding,
+    
     addLogoBrand,
     getLogoBrand,
     deleteLogoBrand,
@@ -51,6 +52,8 @@ routerHome.post('/api/addWedding',addWedding);
 routerHome.get('/api/getWedding',getWedding);
 routerHome.put('/api/updateWedding/:id',updateWedding);
 routerHome.delete('/api/deleteImage/:id',deleteImage);
+routerHome.delete('/api/deleteWedding/:id',deleteWedding);
+
 // logo nhãn hàng
 routerHome.post('/api/addLogoBrand',addLogoBrand);
 routerHome.get('/api/getLogoBrand',getLogoBrand);

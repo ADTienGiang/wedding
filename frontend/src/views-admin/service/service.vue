@@ -392,7 +392,6 @@ export default {
           }
         }
     },
-  
     async submitForm() {
       console.log(this.filesArr)
       try {
